@@ -70,7 +70,7 @@ func setUsername(s *discordgo.Session) {
 	tmp2, err2 := s.GuildMember(config.Configuration.Discord.GuildId, config.Configuration.Discord.UserId)
 	if err != nil {
 		config.Logger.Panicf("UserId %s wasn't valid!, %s \n", config.Configuration.Discord.UserId, err)
-	} else if err != nil {
+	} else if err2 != nil {
 		config.Logger.Panicf("UserId %s or GuildId %s wasn't valid!, %s \n", config.Configuration.Discord.UserId, config.Configuration.Discord.GuildId, err2)
 	}
 	if tmp2.Nick != "" {
