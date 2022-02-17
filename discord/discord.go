@@ -1,6 +1,7 @@
 package discord
 
 import (
+	"fmt"
 	"nathanman/config"
 	"nathanman/database"
 	"nathanman/model"
@@ -93,6 +94,11 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 	if m.ChannelID == config.Configuration.Discord.ListenChannel {
 		if mp := regex.Regex.FindStringSubmatch(m.Content); mp != nil {
+			if len(mp[0]) > 32 || regex.BadwordRegex.MatchString(mp[0]) {
+				s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("Nichtvalider nutzername: %v. %v", mp[0], m.Author.Mention()))
+				return
+			}
+
 			if database.Db.Where("name = ?", mp[0]).First(&model.Entry{}).Error != nil {
 				setUsername(s)
 				entry := model.New(m.Author.ID, mp[0])

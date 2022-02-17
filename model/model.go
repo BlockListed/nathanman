@@ -7,9 +7,8 @@ import (
 )
 
 type Entry struct {
-	ID     string `gorm:"primaryKey;not null;unique"`
-	UserId string
-	Name   string
+	ID   string `gorm:"primaryKey;not null;unique"`
+	Name string
 }
 
 type Config struct {
