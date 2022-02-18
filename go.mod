@@ -3,6 +3,7 @@ module nathanman
 go 1.17
 
 require (
+	github.com/TwiN/go-color v1.1.0
 	github.com/bwmarrin/discordgo v0.23.2
 	github.com/jinzhu/now v1.1.4
 	github.com/matoous/go-nanoid/v2 v2.0.0
