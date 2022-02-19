@@ -111,8 +111,16 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if mp := regex.Regex.FindStringSubmatch(m.Content); mp != nil {
 			name := mp[0]
 			if len(name) > 32 || regex.BadwordRegex.MatchString(name) {
-				if _, err := s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("Nichtvalider nutzername: %v. %v", name, m.Author.Mention())); err != nil {
-					config.Logger.Println(color.InYellow(fmt.Sprintf("Couldn't send plaintext message. %v", err)))
+				msg, err := s.ChannelMessageSendComplex(m.ChannelID, &discordgo.MessageSend{
+					Content: fmt.Sprintf("Nichtvalider nutzername: %v. %v", name, m.Author.Mention()),
+					Reference: &discordgo.MessageReference{
+						MessageID: m.ID,
+						ChannelID: m.ChannelID,
+						GuildID:   m.GuildID,
+					},
+				})
+				if err != nil {
+					config.Logger.Println(color.InYellow(fmt.Sprintf("Couldn't send complex message message: %v. %v", msg, err)))
 				}
 				config.Logger.Println(color.InYellow(fmt.Sprintf("Invalid name: %v", name)))
 				return
