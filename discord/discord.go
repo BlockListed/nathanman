@@ -109,21 +109,23 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 	if m.ChannelID == config.Configuration.Discord.ListenChannel {
 		if mp := regex.Regex.FindStringSubmatch(m.Content); mp != nil {
-			if len(mp[0]) > 32 || regex.BadwordRegex.MatchString(mp[0]) {
-				if _, err := s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("Nichtvalider nutzername: %v. %v", mp[0], m.Author.Mention())); err != nil {
+			name := mp[0]
+			if len(name) > 32 || regex.BadwordRegex.MatchString(name) {
+				if _, err := s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("Nichtvalider nutzername: %v. %v", name, m.Author.Mention())); err != nil {
 					util.LogInYellow(fmt.Sprintf("Couldn't send plaintext message. %v", err))
 				}
+				util.LogInYellow(fmt.Sprintf("Invalid name: %v", name))
 				return
 			}
 
 			// Execute only IF entry doesn't exist, aka there IS an error.
-			if database.Db.Where("name = ?", mp[0]).First(&model.Entry{}).Error != nil {
+			if database.Db.Where("name = ?", name).First(&model.Entry{}).Error != nil {
 				setUsername(s)
-				entry := model.New(m.Author.ID, mp[0])
+				entry := model.New(m.Author.ID, name)
 				database.Db.Create(entry)
 				msg, err := s.ChannelMessageSendEmbed(config.Configuration.Discord.SendChannel, &discordgo.MessageEmbed{
 					Type:  discordgo.EmbedTypeRich,
-					Title: "Nutzername für " + userName + " hinzugefügt. Name: " + mp[0],
+					Title: "Nutzername für " + userName + " hinzugefügt. Name: " + name,
 					Color: 32768,
 					Fields: []*discordgo.MessageEmbedField{
 						{
