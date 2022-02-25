@@ -7,8 +7,9 @@ import (
 )
 
 type Entry struct {
-	ID   string `gorm:"primaryKey;not null;unique"`
-	Name string
+	ID     string `gorm:"primaryKey;not null;unique"`
+	UserId string
+	Name   string
 }
 
 type Config struct {
@@ -19,7 +20,8 @@ type Config struct {
 func New(userId, name string) Entry {
 	id, _ := gonanoid.New()
 	return Entry{
-		ID:   id,
-		Name: name,
+		UserId: userId,
+		ID:     id,
+		Name:   name,
 	}
 }
