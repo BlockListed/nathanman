@@ -18,6 +18,6 @@ func main() {
 	wg.Add(1)
 	go discord.Run(quit, wg)
 	<-sc
-	wg.Wait()
 	quit <- "stop"
+	wg.Wait()
 }
