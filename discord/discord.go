@@ -110,7 +110,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.ChannelID == config.Configuration.Discord.ListenChannel {
 		if mp := regex.Regex.FindStringSubmatch(m.Content); mp != nil {
 			name := mp[0]
-			if len(name) > 32 || regex.BadwordRegex.MatchString(name) {
+			if len(name) > 32 {
 				msg, err := s.ChannelMessageSendComplex(m.ChannelID, &discordgo.MessageSend{
 					Content: fmt.Sprintf("Nichtvalider nutzername: %v. %v", name, m.Author.Mention()),
 					Reference: &discordgo.MessageReference{
