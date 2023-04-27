@@ -66,10 +66,6 @@ func poll_rename(s *discordgo.Session) {
 			} else {
 				config.Logger.Printf("Renamed user %s to %s! \n", userName, entry.Name)
 			}
-			if err := database.Db.Where("name = ?", entry.Name).Delete(&model.Entry{}).Error; err != nil {
-				config.Logger.Println(color.InYellow(fmt.Sprintf("Couldnt delete entry: %v. %v", entry, err)))
-				return
-			}
 
 			config_data.Lasttime = now.BeginningOfDay()
 			if err := database.Db.Where("bot = ?", "nathanman").Save(config_data).Error; err != nil {
